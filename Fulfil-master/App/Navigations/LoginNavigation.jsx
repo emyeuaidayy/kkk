@@ -7,11 +7,8 @@ import ForgotPass from '../Screens/ForgotPassScreen/ForgotPass'
 import Login from '../Screens/LoginScreen/Login' 
 import HomeScreen from '../Screens/HomeScreen/HomeScreen'
 import ProfileScreen from '../Screens/ProfileScreen/ProfileScreen'
-import BusinessListByCategoryScreen from '../Screens/BusinesListByCategoryScreen/BusinessListByCategoryScreen';
-import BusinessDetailsScreen from '../Screens/BusinessDetailsScreen/BusinessDetailsScreen';
-import BookingScreen from '../Screens/BookingScreen/BookingScreen';
 import TabNavigation from '../Navigations/TabNavigation'
-
+import BookingJob2 from '../Screens/BookingScreen/BookingJob2'
 
 const Stack = createStackNavigator();
 
@@ -27,9 +24,8 @@ export default function SignNavigation() {
           <Stack.Screen name="SignUp" component={Signup}/>
           <Stack.Screen name="ForgotPass" component={ForgotPass}/>
           <Stack.Screen name="Login" component={Login}/>
-          <Stack.Screen name='business-list' component={BusinessListByCategoryScreen}/>
-          <Stack.Screen name='business-detail' component={BusinessDetailsScreen} />
           <Stack.Screen name='TabNav' component={TabNavigation} />
+          <Stack.Screen name='BookingJob2' component={BookingJob2}/>
         </Stack.Navigator>
   );
 }

@@ -2,9 +2,7 @@ import { View, Text, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Header } from 'react-native/Libraries/NewAppScreen'
 import {PageHeading} from './../../Components/PageHeading'
-import GlobalApi from './../../Utils/GlobalApi'
 import { useUser } from '@clerk/clerk-expo'
-import BusinessListItem from './../BusinesListByCategoryScreen/BusinessListItem'
 export default function BookingScreen() {
 
   const {user}=useUser();

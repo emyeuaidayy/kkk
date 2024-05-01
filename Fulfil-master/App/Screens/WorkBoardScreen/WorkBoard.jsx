@@ -18,21 +18,21 @@ export default function WorkBoard() {
         <View style={styles.row}>
             <TouchableOpacity style={styles.button1} 
             onPress={() => navigation.navigate('GetAllJob')}>
-            <Text style={styles.buttonText}>Button 1</Text>
+            <Text style={styles.buttonText}>Job List</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button2} 
             onPress={() => navigation.navigate('JobBooked')}>
-            <Text style={styles.buttonText}>Button 2</Text>
+            <Text style={styles.buttonText}>Booked</Text>
             </TouchableOpacity>
         </View>
         <View style={styles.row}>
             <TouchableOpacity style={styles.button3} 
             onPress={() => navigation.navigate('JobRegistion')}>
-            <Text style={styles.buttonText}>Button 3</Text>
+            <Text style={styles.buttonText}>Job Registation</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button4} 
             onPress={() => navigation.navigate('YourJob')}>
-            <Text style={styles.buttonText}>Button 4</Text>
+            <Text style={styles.buttonText}>Your Job</Text>
             </TouchableOpacity>
         </View>
         </View>

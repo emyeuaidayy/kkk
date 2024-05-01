@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { jwtDecode } from 'jwt-decode'; // Corrected import
 import Path from '../../Utils/Api'; // Assuming Path is correctly imported
-
+import BookingJob2 from '../BookingScreen/BookingJob2'
 import Heading from '../../Components/Heading';
 import Colors from '../../Utils/Colors';
 
@@ -55,17 +55,18 @@ export default function Categories() {
 
     const handleCategoryPress = async (categoryName) => {
         console.log('Category pressed:', categoryName);
-
+        
         const query = `
             mutation {
                 chooseWork(input: { name : "${categoryName}"}) {
                     token
                 }
+            
             }
         `;
-
+        
         const variables = {};
-
+        
         try {
             const res = await fetch(Path, {
                 method: 'POST',
@@ -79,16 +80,17 @@ export default function Categories() {
             });
 
             const json = await res.json();
-
+            
             if (!json.errors) {
                 console.log('Success:', json.data.chooseWork);
                 const token = json.data.chooseWork.token;
-
+                
                 const decoded = jwtDecode(token);
                 console.log(decoded);
+                navigation.navigate('BookingJob2');
 
                 await AsyncStorage.setItem('job', token);
-                navigation.navigate('BookingJob2');
+                
             } else {
                 console.error('Mutation error:', json.errors);
             }

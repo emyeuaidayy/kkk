@@ -57,15 +57,15 @@ export default function BusinessList() {
     };
 
     return (
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 30 }}>
             <Heading text={'Latest Business'} isViewAll={true} />
 
             <ScrollView horizontal contentContainerStyle={styles.latestJobsContainer}>
                 {latestJobs.map((job, index) => (
                     <TouchableOpacity key={index} style={styles.latestJobItem} onPress={() => handleLastestJobPress(job)}>
                         <Text style={styles.latestJobTitle}>{job.JobName}</Text>
-                        <Text>{job.jobDecription}</Text>
-                        <Text>{job.price}</Text>
+                        <Text style={styles.latestJobInfor}>{job.jobDecription}</Text>
+                        <Text style={styles.latestJobInfor}>{job.price}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -78,16 +78,21 @@ const styles = StyleSheet.create({
         paddingLeft: 10, // Add padding to the left to prevent the first item from sticking to the edge
     },
     latestJobItem: {
-        marginRight: 10,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: Colors.GRAY,
+        backgroundColor: '#9D63D9',
+        marginRight: 20,
+        padding: 15,
+        borderWidth: 0,
+        borderColor: '#9f5bff',
         borderRadius: 10,
         width: 200, // Adjust the width according to your design
     },
     latestJobTitle: {
-        fontSize: 16,
+        fontSize: 20,
         fontFamily: 'outfit-medium',
         marginBottom: 5,
+        color: '#FFFFFF',
+    },
+    latestJobInfor: {
+        color: '#FFFFFF',
     },
 });
