@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert  ,ScrollView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import "core-js/stable/atob";
@@ -126,6 +126,7 @@ const JobRegistration = () => {
   };
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
     <View style={styles.container}>
       <View style={styles.headers} />
       <Text style={styles.title}>Job Registration</Text>
@@ -160,6 +161,7 @@ const JobRegistration = () => {
             </TouchableOpacity>
           ))}
         </View>
+        
       )}
 
       <TextInput
@@ -173,10 +175,16 @@ const JobRegistration = () => {
         <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
+    
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,

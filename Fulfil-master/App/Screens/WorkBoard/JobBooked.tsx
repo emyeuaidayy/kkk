@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { jwtDecode } from 'jwt-decode'; // Fixed import name
 import path from '../../Utils/Api'; // Assuming Path is correctly imported
 
@@ -105,28 +105,33 @@ const JobInfoBox = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Job List</Text>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Job List</Text>
 
-      {jobList.map((job, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.jobContainer}
-          onPress={() => handleJobPress(job)}
-        >
-          <Text style={styles.jobName}>{job.JobName}</Text>
-          <Text style={styles.jobType}>{job.JobType}</Text>
-          <Text style={styles.jobDescription}>{job.jobDecription}</Text>
-          <Text style={styles.jobPrice}>Price: {job.price}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        {jobList.map((job, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.jobContainer}
+            onPress={() => handleJobPress(job)}
+          >
+            <Text style={styles.jobName}>{job.JobName}</Text>
+            <Text style={styles.jobType}>{job.JobType}</Text>
+            <Text style={styles.jobDescription}>{job.jobDecription}</Text>
+            <Text style={styles.jobPrice}>Price: {job.price}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   container: {
-    flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 24,
   },

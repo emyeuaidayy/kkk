@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity ,ScrollView } from 'react-native';
 import { jwtDecode } from 'jwt-decode'; // Fixed import name
 import path from '../../Utils/Api'; // Assuming Path is correctly imported
 
@@ -105,6 +105,7 @@ const JobInfoBox = ({ navigation }) => {
   };
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
     <View style={styles.container}>
       <Text style={styles.title}>Job List</Text>
 
@@ -121,10 +122,15 @@ const JobInfoBox = ({ navigation }) => {
         </TouchableOpacity>
       ))}
     </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,

@@ -1,25 +1,26 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { jwtDecode } from 'jwt-decode'; // Fixed import name
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import path from '../../Utils/Api'
+import { jwtDecode } from 'jwt-decode';
 
 // Define JwtPayload interface before usage
 interface JwtPayload {
-  name: string;
+  userId: string;
   accountId: string;
+  _id : string
 }
 
-const JobInfoBox = ({ navigation }) => {
-  const [jobList, setJobList] = useState([]);
+const BookingEmployee = () => {
+  const [userInfo, setUserInfo] = useState<any>(null); // State to store user information
 
   useEffect(() => {
-    handlePress();
+    showInformation(); // Fetch user information when component mounts
   }, []);
 
-  const handlePress = async () => {
+  const showInformation = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem('userJob');
 
       if (!token) {
         console.error('Token is empty or null');
@@ -27,24 +28,23 @@ const JobInfoBox = ({ navigation }) => {
       }
 
       const decoded: JwtPayload = jwtDecode(token);
-      const userId = decoded.accountId;
+      const userId = decoded.userId;
 
       const query = `
-        query getYourJobBooked($name: String!) {
-            getYourJobBooked(userId: $name, status: "unavailable") {
-                userId
-                status
-                price
-                jobDecription
-                _id
-                customerId
-                JobName
-                JobType
-              }
+        query GetUserById{
+          getUserNamebyID(id: "${userId}") {
+            phone
+            name
+            id
+            gender
+            email
+            age
+            address
+          }
         }
       `;
 
-      const variables = { name: userId };
+      const variables = { userId };
 
       const response = await fetch(path, {
         method: 'POST',
@@ -55,51 +55,74 @@ const JobInfoBox = ({ navigation }) => {
       });
 
       const json = await response.json();
-      const { getYourJobBooked: jobData } = json.data; // Updated response key
-      console.log(jobData);
-      setJobList(jobData);
+      const userData = json.data.getUserNamebyID;
+      setUserInfo(userData);
     } catch (error) {
-      console.error('Error fetching job info:', error);
+      console.error('Error fetching user info:', error);
     }
   };
 
-
-  const handleJobPress = async (job) => {
-    console.log('Pressed job:', job._id);
+  const handleBookingPress = async () => {
     try {
+      const token_user = await AsyncStorage.getItem('token');
+
+      if (!token_user) {
+        console.error('Token is empty or null');
+        return;
+      }
+
+      const decoded: JwtPayload = jwtDecode(token_user);
+
+    //   const customerId = decoded.accountId;
+    const customerId = 'available'
+
+      console.log('customerID ' + customerId);
+
+      const status = "available";
+      const token = await AsyncStorage.getItem('userJob');
+      if (!token) {
+        console.error('Token is empty or null');
+        return;
+      }
+      const decodedUser: JwtPayload = jwtDecode(token);
+      const job_id = decodedUser._id;
+      console.log('user ' + decodedUser._id);
+
       const query = `
         mutation {
-          jobBookingGet(input: {
-            _id: "${job._id}"
+            jobCancel(input: {
+            _id: "${job_id}",
+            status: "${status}",
+            customerId: "${customerId}"
           }) {
-            token
+            status
+            customerId
           }
         }
       `;
-      
+
+      const variables = {};
+
       const response = await fetch(path, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, variables }),
       });
 
       const json = await response.json();
-      console.log(json.data.jobBookingGet);
-      if (!json.errors) {
-        // Phản hồi thành công
-        console.log('Success:', json.data.jobBookingGet);
-        const token = json.data.jobBookingGet.token;
+      
+      Alert.alert(
+        'Success',
+        'Hủy thành công!',
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') }
+        ],
+        { cancelable: false }
+      );
 
-        const decoded = jwtDecode(token);
-        console.log(decoded);
-
-        navigation.navigate('deleteJob')
-
-        // Lưu trữ token vào AsyncStorage
-        await AsyncStorage.setItem('userJob', token);
-      }
+      console.log(json); // Handle the response as needed
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -107,20 +130,22 @@ const JobInfoBox = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Job List</Text>
-
-      {jobList.map((job, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.jobContainer}
-          onPress={() => handleJobPress(job)}
-        >
-          <Text style={styles.jobName}>{job.JobName}</Text>
-          <Text style={styles.jobType}>{job.JobType}</Text>
-          <Text style={styles.jobDescription}>{job.jobDecription}</Text>
-          <Text style={styles.jobPrice}>Price: {job.price}</Text>
-        </TouchableOpacity>
-      ))}
+      {userInfo ? (
+        <>
+          <Text style={styles.userName}>Nhân Viên {userInfo.name}</Text>
+          <Text style={styles.userInfo}>Phone: {userInfo.phone}</Text>
+          <Text style={styles.userInfo}>ID: {userInfo.id}</Text>
+          <Text style={styles.userInfo}>Gender: {userInfo.gender}</Text>
+          <Text style={styles.userInfo}>Email: {userInfo.email}</Text>
+          <Text style={styles.userInfo}>Age: {userInfo.age}</Text>
+          <Text style={styles.userInfo}>Address: {userInfo.address}</Text>
+          <TouchableOpacity style={styles.bookingButton} onPress={handleBookingPress}>
+            <Text style={styles.buttonText}>Cancel Book</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <Text>Loading...</Text>
+      )}
     </View>
   );
 };
@@ -128,36 +153,28 @@ const JobInfoBox = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {
+  userName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  jobContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  jobName: {
+  userInfo: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 10,
   },
-  jobType: {
-    fontSize: 16,
-    marginBottom: 8,
+  bookingButton: {
+    backgroundColor: 'blue',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginTop: 20,
   },
-  jobDescription: {
-    marginBottom: 8,
-  },
-  jobPrice: {
-    fontWeight: 'bold',
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 
-export default JobInfoBox;
+export default BookingEmployee;
