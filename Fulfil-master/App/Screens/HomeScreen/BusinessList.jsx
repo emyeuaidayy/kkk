@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Heading from '../../Components/Heading';
-import Path from '../../Utils/Api'; // Assuming Path is correctly imported
+import path from '../../Utils/Api'; // Assuming Path is correctly imported
 import Colors from '../../Utils/Colors';
 import { useNavigation } from '@react-navigation/native';
+import jwt_decode, { jwtDecode } from 'jwt-decode';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function BusinessList() {
     const [latestJobs, setLatestJobs] = useState([]);
@@ -30,7 +32,7 @@ export default function BusinessList() {
                     }
                 }
             `;
-            const response = await fetch(Path, {
+            const response = await fetch(path, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,10 +53,53 @@ export default function BusinessList() {
         }
     };
 
-    const handleLastestJobPress = (job) => {
-        // Navigate to job details screen or perform any action on job press
-        console.log('Pressed job:', job);
-    };
+    const handleLastestJobPress = async (job) => {
+        const query = `
+          mutation {
+            jobBookingGet(input: {
+              _id: "${job._id}"
+            }) {
+              token
+            }
+          }
+        `;
+      
+        try {
+          const res = await fetch(path, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              query,
+            }),
+          });
+      
+          const json = await res.json();
+      
+          if (!json.errors) {
+            console.log('Success:', json.data.jobBookingGet);
+            const token = json.data.jobBookingGet.token;
+      
+            const decoded = jwtDecode(token);
+            console.log(decoded);
+      
+            // Store token in AsyncStorage
+            navigation.navigate('UserJobInforamtion')
+      
+            // Lưu trữ token vào AsyncStorage
+            await AsyncStorage.setItem('userJob', token);
+          } else {
+            // Handle errors from mutation
+            console.error('Mutation error:', json.errors);
+            // Display an error message to the user if needed
+          }
+        } catch (error) {
+          // Handle fetch or other errors
+          console.error('Error:', error);
+          // Display an error message to the user if needed
+        }
+      };
 
     return (
         <View style={{ marginTop: 30 }}>

@@ -8,7 +8,7 @@ import { useOAuth } from "@clerk/clerk-expo";
 import { useWarmUpBrowser } from '../../hooks/warmUpBrowser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode, { jwtDecode } from 'jwt-decode';
-
+import path from '../../Utils/Api'; // Assuming Path is correctly imported
 
 import "core-js/stable/atob"
 
@@ -58,7 +58,7 @@ const SignIn = () => {
         const variables = {};
     
         try {
-          const res = await fetch('http://172.20.10.3:3000/graphql', {
+          const res = await fetch(path, {
             method: 'POST',
             headers: {  
               'Content-Type': 'application/json',

@@ -101,7 +101,12 @@ export default function Categories() {
 
     return (
         <View style={{ marginTop: 10 }}>
-            <Heading text={'Categories'} isViewAll={true} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15 }}>
+                <Heading text={'Categories'} />
+                <TouchableOpacity onPress={() => navigation.navigate('BookingJob')}>
+                    <Text style={{ fontFamily: 'outfit-medium', color: Colors.BLUE }}>View All</Text>
+                </TouchableOpacity>
+            </View>
             <FlatList
                 data={categories}
                 horizontal={true}
@@ -126,6 +131,7 @@ export default function Categories() {
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
   container:{

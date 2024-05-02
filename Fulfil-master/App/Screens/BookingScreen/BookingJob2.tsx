@@ -93,7 +93,7 @@ const handleJobPress = async (job) => {
     const decoded = jwtDecode(token);
     console.log(decoded);
 
-    navigation.navigate('UserJobInformation')
+    navigation.navigate('UserJobInforamtion')
 
     // Lưu trữ token vào AsyncStorage
     await AsyncStorage.setItem('userJob', token);

@@ -17,8 +17,8 @@ export default function WorkBoard() {
         <View style={styles.container}>
         <View style={styles.row}>
             <TouchableOpacity style={styles.button1} 
-            onPress={() => navigation.navigate('GetAllJob')}>
-            <Text style={styles.buttonText}>Job List</Text>
+            onPress={() => navigation.navigate('YourJobBooked')}>
+            <Text style={styles.buttonText}>Your JobBooked</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button2} 
             onPress={() => navigation.navigate('JobBooked')}>
